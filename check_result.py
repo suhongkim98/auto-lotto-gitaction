@@ -16,10 +16,13 @@ USER_ID = sys.argv[1]
 USER_PW = sys.argv[2]
 
 # SLACK 설정
-SLACK_API_URL = "https://slack.com/api/chat.postMessage"
-SLACK_BOT_TOKEN = sys.argv[3]
-SLACK_CHANNEL = sys.argv[4]
+SLACK_HOOK_URL_TOKEN = sys.argv[3]
 
+# 구매 개수를 설정
+COUNT = sys.argv[4]
+
+# 알림 경로
+SLACK_API_URL = "https://hooks.slack.com/services/" + SLACK_HOOK_URL_TOKEN
 
 def get_now() -> datetime:
     # 한국 시간대 객체 생성
@@ -42,12 +45,10 @@ def hook_slack(message: str) -> Response:
     korea_time_str = get_now().strftime("%Y-%m-%d %H:%M:%S")
 
     payload = {
-        "text": f"> {korea_time_str} *로또 자동 구매 봇 알림* \n{message}",
-        "channel": SLACK_CHANNEL,
+        "text": f"> {korea_time_str} *로또 자동 구매 봇 알림* \n{message}"
     }
     headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
+        "Content-Type": "application/json"
     }
     res = post(SLACK_API_URL, json=payload, headers=headers)
     return res
